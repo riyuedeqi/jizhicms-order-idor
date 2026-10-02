@@ -1,0 +1,14 @@
+--- LOGIN REQUEST ---
+POST http://127.0.0.1:18080/index.php/login/index
+tel=15500000002&password=LabPassB&ajax=1
+--- LOGIN RESPONSE ---
+200
+{"code":0,"msg":"登录成功！","url":"http://127.0.0.1:18080/user/index.html","data":{"url":"http://127.0.0.1:18080/user/index.html"}}
+cookies {'PHPSESSID': '25fb52005e012d39635e4338ef792989'}
+--- PAY REQUEST ---
+POST http://127.0.0.1:18080/index.php/order/pay
+go=1&orderno=LABA-ORDER-20261001&username=MARKER-B-SECOND&tel=18888888888&email=second%40example.test&address=MARKER-ADDRESS-SECOND&paytype=1&ajax=1
+--- PAY RESPONSE ---
+200
+{"code":0,"msg":"我们已经收到您的订单，我们会尽快给你发货，请密切关注您的邮箱以获得订单的最新消息，谢谢合作！","url":"http://127.0.0.1:18080/user/orders.html"}
+cookies {'PHPSESSID': '25fb52005e012d39635e4338ef792989'}

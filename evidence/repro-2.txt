@@ -1,0 +1,2 @@
+LOGIN 200 {"code":0,"msg":"登录成功！","url":"http://127.0.0.1:18080/user/index.html","data":{"url":"http://127.0.0.1:18080/user/index.html"}} {'PHPSESSID': '2728f119bcf43d9494627c8d192c299f'}
+PAY 200 {"code":0,"msg":"我们已经收到您的订单，我们会尽快给你发货，请密切关注您的邮箱以获得订单的最新消息，谢谢合作！","url":"http://127.0.0.1:18080/user/orders.html"}
