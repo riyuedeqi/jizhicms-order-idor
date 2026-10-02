@@ -143,7 +143,7 @@ Apply the same constraint to every order operation that changes state. Also repl
 | 2026-10-01 | Identified during static review of the `v2.5.6` source tree |
 | 2026-10-01 23:25 | First dynamic reproduction on an isolated, self-owned lab instance |
 | 2026-10-02 | Second independent reproduction; evidence captured and hashed; lab reset and verified clean |
-| 2026-10-02 | Duplicate check across NVD, OpenCVE, VulDB, CNVD, Exploit-DB and the upstream issue tracker |
+| 2026-10-02 | Duplicate check across NVD, OpenCVE, VulDB, CNVD, Exploit-DB and the upstream issue tracker; CNVD-2020-26485 located and distinguished |
 | 2026-10-02 | Upstream re-checked, branch `2.0` HEAD `ff2c965` is still vulnerable |
 | 2026-10-02 | Vendor notified via the security contacts published in `SECURITY.md` (`ttuuffuu@163.com`, `2581047041@qq.com`) |
 | 2026-10-02 | CVE requested |
@@ -151,11 +151,22 @@ Apply the same constraint to every order operation that changes state. Also repl
 
 ## Duplicate check
 
-Checked 2026-10-01 … 2026-10-02 across NVD/CVE, OpenCVE (vendor `jizhicms`, **40 published CVEs**), VulDB, CNVD, Exploit-DB, and public GitHub issues/code history.
+Checked 2026-10-01 to 2026-10-02 against NVD (full API pull, 38 entries for this product), OpenCVE, VulDB, CNVD, Exploit-DB and the upstream issue tracker.
 
-No public duplicate was found for this product + this endpoint + this root cause. The published JizhiCMS CVE corpus covers SQL injection, XSS, SSRF, CSRF, arbitrary file upload/download and one improper-authorization issue in `/user/release.html` (`ishot`, CVE-2025-2638, ≤ 1.7.0). **None covers `order/pay` or cross-user order ownership.**
+No public entry describes this endpoint or this root cause. None of the 38 published JizhiCMS CVEs mentions an order-related weakness; the authorization-flavoured ones concern `/user/userinfo.html` (`jifen`), `/user/release.html` (`ishot`) and an admin plugin download.
 
-Caveat: private reports, non-public CNVD queues and reserved CVE/VDB entries cannot be fully excluded. This is "no public duplicate found", not a guarantee of uniqueness.
+There is prior art for the class, disclosed here rather than omitted:
+
+- **CNVD-2020-26485**, disclosed 2020-05-07, describes a logic flaw allowing unauthorised **viewing and deletion** of other members' orders. A 2019 code-review write-up describes the same read-only exposure in the `UserController` order listing.
+- Owner checks were added to `user/orderdetails`, `user/payment` and `user/orderdel` in commit `a6d38aa` (2022-01-30).
+
+This report differs in three verifiable ways:
+
+1. Different endpoint. The prior art concerns the order listing, view and delete paths under `UserController`, which were remediated in 2022. This is `OrderController::pay()`.
+2. Different primitive. The prior art is a read exposure. This is an unauthorised write to another member's order.
+3. Never remediated. `OrderController::pay()` uses `find(['orderno'=>$w['orderno']])` with no owner term at every commit inspected (`a6d38aa`, `6e2c3a8`, `650aaa7`, `v2.4.5`, `v2.5.6`, branch `2.0` HEAD). The 2022 fix covered the paths the 2020 report named and missed this one.
+
+Reserved CVE/VDB entries and non-public CNVD queues cannot be excluded, so this is "no public duplicate found" rather than a claim of uniqueness.
 
 ## Scope
 
